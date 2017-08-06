@@ -11,7 +11,12 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/BTloginapp');
+mongoose.connect('mongodb://localhost/BTloginapp', {
+  useMongoClient: true
+  // wowsers, recheck
+  // http://mongoosejs.com/docs/connections.html#use-mongo-client
+});
+
 var db = mongoose.connection;
 
 var routes = require('./routes/index');
@@ -34,6 +39,7 @@ app.use(bodyParser.urlencoded( {extended: false }));
 app.use(cookieParser());
 
 // set static folder
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 

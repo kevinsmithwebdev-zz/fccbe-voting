@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login App</title>
+  <title>Kevin's Voting App for FCC</title>
   <link rel="stylesheet" href="/css/bootstrap.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
@@ -21,7 +21,11 @@
           {{/if}}
         </ul>
       </nav>
-      <h3 class="text-muted">LoginApp</h3>
+      <h3 class="text-muted">LoginApp
+      {{#if user}}
+        - Welcome {{user.name}}
+      {{/if}}
+      </h3>
     </div>
 
     <div class="row">
@@ -42,7 +46,7 @@
   </div>
 
     <footer class="footer">
-      <p>&copy; 2017 LoginApp</p>
+      <p>&copy; 2017 Kevin Smith - Made for <a href="https://www.freecodecamp.org">Free Code Camp</a>'s Backend Certificate</p>
     </footer>
 
   </div> <!-- /container -->

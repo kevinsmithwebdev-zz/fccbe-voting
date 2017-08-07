@@ -23,7 +23,6 @@ router.get('/login', function(req, res) {
 router.post('/register', function(req, res) {
 
   var name = req.body.name;
-  var email = req.body.email;
   var username = req.body.username;
   var password = req.body.password;
   var password2 = req.body.password2;
@@ -31,8 +30,6 @@ router.post('/register', function(req, res) {
   // validation
 
   req.checkBody('name', "Name is required").notEmpty();
-  req.checkBody('email', "Email is required").notEmpty(); // wowsers
-  req.checkBody('email', "Email is not valid").isEmail();  // wosers
   req.checkBody('username', "username is required").notEmpty();
   req.checkBody('password', "Password is required").notEmpty();
   req.checkBody('password2', "Password is required").equals(req.body.password);
@@ -46,7 +43,6 @@ router.post('/register', function(req, res) {
   } else {
     var newUser = new User({
       name: name,
-      email: email,
       username: username,
       password: password
     });
@@ -94,7 +90,7 @@ passport.deserializeUser(function(id, done) {
 router.post('/login',
   passport.authenticate('local', {successRedirect: '/', failureRedirect: '/users/login', failureFlash: true}),
   function(req, res) {
-    res.redirect('/')
+    res.redirect('/');
   });
 
 router.get('/logout', function(req, res) {

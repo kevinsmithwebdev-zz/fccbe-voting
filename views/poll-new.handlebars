@@ -1,0 +1,58 @@
+<h2 class="page-header">Create New Poll</h2>
+
+{{#if errors}}
+  {{#each errors}}
+    <div class="alert alert-danger">{{msg}}</div>
+  {{/each}}
+{{/if}}
+
+<form action="/polls/new" method="post">
+  <div class="form-group">
+    <label>Title</label>
+    <br>
+    <input type="text" class="form-control" name="title" placeholder="title">
+  </div>
+  <br>
+  <label>Choices</label><button id="add-choice" type="button" class="btn btn-default">Add Choices</button>
+
+  <div id="choice-group" class="form-group">
+    <span>
+      <input type="text" class="form-control" name="choices" placeholder="choice #1">
+    </span>
+    <span>
+      <input type="text" class="form-control" name="choices" placeholder="choice #2">
+    </span>
+  </div>
+
+
+  <button type="submit" class="btn btn-default">Submit</button>
+  <button type="reset" class="btn btn-default">Reset</button>
+  <button type="button" class="btn btn-default">Go Back</button>
+</form>
+
+
+
+<script type="text/javascript">
+  const MAX_CHOICES = 10;
+
+  var addButton = document.getElementById("add-choice");
+
+  addButton.addEventListener('click', addChoice, false);
+
+  function addChoice() {
+    var choiceGroup = document.getElementById("choice-group");
+    var numChoices = choiceGroup.childElementCount;
+
+    numChoices++;
+
+    var newChoice=document.createElement('span');
+
+    newChoice.innerHTML = '<input type="text" class="form-control" name="choices" placeholder="choice #' + numChoices + '">';
+
+    choiceGroup.appendChild(newChoice);
+
+    if (numChoices==MAX_CHOICES)
+      addButton.disabled = true;
+  }
+
+</script>

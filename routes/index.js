@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+// var ClickHandlerClient = require(process.cwd() + '/controllers/clickController.client.js');
+
 // get homepage
 
 router.get('/', ensureAuthenticated, function(req, res) {

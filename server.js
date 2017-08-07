@@ -11,7 +11,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/BTloginapp', {
+mongoose.connect('mongodb://localhost/votingApp', {
   useMongoClient: true
   // wowsers, recheck
   // http://mongoosejs.com/docs/connections.html#use-mongo-client
@@ -21,6 +21,9 @@ var db = mongoose.connection;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var polls = require('./routes/polls');
+// var controllers = require('./controllers/clickController.client');
+
 
 // init app
 
@@ -32,7 +35,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs( {defaultLayout:'main'} ));
 app.set('view engine', 'handlebars');
 
-// body parster middleware
+// body parser middleware
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded( {extended: false }));
@@ -40,8 +43,9 @@ app.use(cookieParser());
 
 // set static folder
 
-
 app.use(express.static(path.join(__dirname, 'public')));
+
+// app.use(express.static(path.join(__dirname, 'controllers')));
 
 // express session
 
@@ -89,10 +93,22 @@ app.use(function(req, res, next) {
   next();
 });
 
+// custom validator
+
+app.use(expressValidator({
+  customValidators: {
+    enoughChoices: function(value) {
+        return value.length>=2;
+    }
+  }
+}));
+
 // routes
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/polls', polls);
+// app.use('/controllers', controllers);
 
 // set port and start
 

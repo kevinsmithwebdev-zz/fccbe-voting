@@ -1,14 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-
 var Poll = require('../models/poll');
-
 
 // polls/newPoll
 
 router.get('/new', function(req, res) {
-  console.log("inside GET polls/new");
   res.render('poll-new');
 });
 
@@ -18,12 +15,6 @@ router.post('/new', function(req, res) {
   req.body.choices = req.body.choices
                 .map(function(choice) {return choice.trim() })
                 .filter (function (choice, i, arr) { return choice && arr.indexOf (choice) == i; });
-
-  // console.log("***" + req.body.title + "***");
-  //
-  // for (var i=0; i<req.body.choices.length; i++) {
-  //   console.log(i + " ***" + req.body.choices[i] + "***");
-  // }
 
   req.checkBody({
    'title': {
@@ -38,45 +29,46 @@ router.post('/new', function(req, res) {
 
   var errors = req.validationErrors();
 
-  // console.log("errors...");
-  // console.log(errors);
-  //
-  // if (errors) {
-  //   res.render('poll-new', {
-  //     errors: errors
-  //   });
-  // } else {
-  //   console.log("time to enter new document");
-  // }
-
-  // for (var i=0; i<req.body.choices.length; i++) {
-  //   console.log(i + " ***" + req.body.choices[i] + "***");
-  // }
-
-  console.log("*** user");
-  console.log(this);
-
-
   var newPoll = new Poll({
     title: req.body.title,
     choices: req.body.choices.map(function(name) {
         return {name: name, votes: 0}
       }, {}),
-    creator: "wowsers",
+    creator: res.locals.user.username,
     voted: []
   });
 
-  console.log("*** new poll");
-  console.log(newPoll);
-
-  Poll.createPoll(newPoll, function(err, poll) { // wowsers
+  Poll.createPoll(newPoll, function(err, poll) {
     if (err) throw err;
-    console.log(poll);
   });
 
   req.flash("success_msg", "Poll succesfully made")
   res.redirect("/");
 
-}); // post poll/new
+}); // post polls/new
+
+
+// show polls
+
+
+router.get('/show', function(req, res) {
+
+  Poll.find(function (err, results) {
+    if (err) {
+      console.log("error in Poll.find");
+      throw err;
+    }
+    console.log("\n\n\n\nsuccess with Poll.find\n\n\n");
+    console.log(results);
+
+    var context = { results: results };
+
+    res.render('polls-show', context);
+  });
+});
+
+
+
+
 
 module.exports = router;

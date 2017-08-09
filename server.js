@@ -11,6 +11,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
+
 mongoose.connect('mongodb://localhost/votingApp', {
   useMongoClient: true
   // wowsers, recheck
@@ -80,6 +81,27 @@ app.use(expressValidator({
   }
 }));
 
+// custom validator
+
+app.use(expressValidator({
+  customValidators: {
+    enoughChoices: function(value) {
+        return value.length>=2;
+    },
+    uniqueUsername: function(value) {
+        console.log("\n\n\nusername validator");
+        User.findOne({ 'username': value }, function (err, user) {
+          if (err) throw err;
+          console.log("\n\nuser\n\n");
+          console.log(user);
+        })
+
+
+        return true;
+    }
+  }
+}));
+
 // connect flash
 
 app.use(flash());
@@ -93,16 +115,6 @@ app.use(function(req, res, next) {
   res.locals.user = req.user || null;
   next();
 });
-
-// custom validator
-
-app.use(expressValidator({
-  customValidators: {
-    enoughChoices: function(value) {
-        return value.length>=2;
-    }
-  }
-}));
 
 // routes
 

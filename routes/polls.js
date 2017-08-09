@@ -3,7 +3,7 @@ var router = express.Router();
 
 var Poll = require('../models/poll');
 
-// polls/newPoll
+// polls/new
 
 router.get('/new', function(req, res) {
   res.render('poll-new');
@@ -65,6 +65,25 @@ router.get('/show', function(req, res) {
 
     res.render('polls-show', context);
   });
+});
+
+// /:username/:pollname
+
+router.get('/:username/:pollname', function(req, res) {
+
+  console.log('in get /:username/:pollname');
+  console.log(req.params);
+
+  Poll.getPoll(req.params.username, req.params.pollname, function(err, poll) {
+    if (err) {
+      console.log("Error finding poll");
+      console.log(err);
+    } else {
+      console.log("poll found!!!");
+      console.log(poll);
+    }
+  });
+
 });
 
 

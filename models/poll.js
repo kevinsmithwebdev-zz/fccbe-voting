@@ -17,6 +17,6 @@ module.exports.createPoll = function(newPoll, callback) {
 }
 
 module.exports.getPoll = function(username, pollname, callback) {
-  var query = {username: username, title: pollname};
+  var query = {creator: username, title: pollname};
   Poll.findOne(query, callback);
 }

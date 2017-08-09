@@ -58,8 +58,6 @@ router.get('/show', function(req, res) {
       console.log("error in Poll.find");
       throw err;
     }
-    console.log("\n\n\n\nsuccess with Poll.find\n\n\n");
-    console.log(results);
 
     var context = { results: results };
 
@@ -74,19 +72,73 @@ router.get('/:username/:pollname', function(req, res) {
   console.log('\n\n\nin get /:username/:pollname');
   console.log(req.params);
 
-  Poll.getPoll(req.params.username, req.params.pollname, function(err, obj) {
+  Poll.getPoll(req.params.username, req.params.pollname, function(err, poll) {
     if (err) {
-      console.log("Error finding poll");
+      console.log("Error finding poll - /polls/" + req.params.username + "/" + req.params.pollname);
       console.log(err);
     } else {
-      console.log("poll found!!!");
-      console.log(obj);
+
+      var context = {poll: poll,
+        helpers: {
+          wowsers: function () {
+             return buildPollChart(poll);
+           }
+        }
+      };
+
+      res.render('poll-show', context);
     }
   });
 
 });
 
 
+function buildPollChart(poll) {
+
+  var html =  "<script>" +
+              "var ctx = document.getElementById('myChart').getContext('2d');" +
+              "var myChart = new Chart(ctx, {" +
+              "type: 'bar'," +
+                "data: {" +
+                  "labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']," +
+                  "datasets: [{" +
+                      "label: '# of Votes'," +
+                      "data: [12, 19, 3, 5, 2, 3]," +
+                      "backgroundColor: [" +
+                        "'rgba(255, 99, 132, 0.2)'," +
+                        "'rgba(54, 162, 235, 0.2)'," +
+                        "'rgba(255, 206, 86, 0.2)'," +
+                        "'rgba(75, 192, 192, 0.2)'," +
+                        "'rgba(153, 102, 255, 0.2)'," +
+                        "'rgba(255, 159, 64, 0.2)'" +
+                      "]," +
+                      "borderColor: [" +
+                        "'rgba(255,99,132,1)'," +
+                        "'rgba(54, 162, 235, 1)'," +
+                        "'rgba(255, 206, 86, 1)'," +
+                        "'rgba(75, 192, 192, 1)'," +
+                        "'rgba(153, 102, 255, 1)'," +
+                        "'rgba(255, 159, 64, 1)'" +
+                      "]," +
+                      "borderWidth: 1" +
+                    "}]" +
+                  "}," +
+                  "options: {" +
+                      "scales: {" +
+                        "  yAxes: [{" +
+                              "ticks: {" +
+                                  "beginAtZero:true" +
+                              "}" +
+                          "}]" +
+                      "}" +
+                  "}" +
+              "});" +
+            "</script>";
+
+
+
+  return html;
+}
 
 
 

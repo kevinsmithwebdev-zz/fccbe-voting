@@ -78,9 +78,19 @@ body {
   }
 }
 
-
 .page-header {
   margin-top: 0;
+}
+
+.poll-button {
+  width: 50%;
+  margin: 5px 0 5px 0;
+  border-radius: 2px;
+}
+
+.poll-button-delete {
+  margin: 5px 0 5px 0;
+  border-radius: 2px;
 }
 
 footer {

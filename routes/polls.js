@@ -69,9 +69,6 @@ router.get('/show', function(req, res) {
 
 router.get('/:username/:pollname', function(req, res) {
 
-  console.log('\n\n\nin get /:username/:pollname');
-  console.log(req.params);
-
   Poll.getPoll(req.params.username, req.params.pollname, function(err, poll) {
     if (err) {
       console.log("Error finding poll - /polls/" + req.params.username + "/" + req.params.pollname);

@@ -36,15 +36,16 @@ app.set('views', path.join(__dirname, 'views'));
 
 var exphbsHelpers = require('./lib/helpers');
 
-app.engine('handlebars', exphbs(
+app.engine('.hbs', exphbs(
         {
-          defaultLayout:'main',
+          extbane: '.hbs',
+          defaultLayout:'main.hbs',
           helpers: exphbsHelpers
         }
     ));
 
 
-app.set('view engine', 'handlebars');
+app.set('view engine', '.hbs');
 
 app.get('/test', function (req, res, next) {
     res.render('test', {

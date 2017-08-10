@@ -1,0 +1,14 @@
+<h2 class="page-header">Dashboard</h2>
+
+<h3>User Actions</h3>
+  <h4><a href="/polls/new">Create new poll</a></h4>
+
+<h3>Your polls</h3>
+
+{{#unless polls}}
+  <h4>You have not created any polls yet.</h4>
+{{/unless}}
+
+{{#each polls}}
+  <button class="btn-primary poll-button">{{title}}</button> <button class="btn-danger poll-button-delete">X</button> <br>
+{{/each}}

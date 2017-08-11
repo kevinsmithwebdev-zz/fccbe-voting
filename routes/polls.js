@@ -11,39 +11,72 @@ router.get('/new', function(req, res) {
 
 router.post('/new', function(req, res) {
 
-  req.body.title = req.body.title.trim();
-  req.body.choices = req.body.choices
-                .map(function(choice) {return choice.trim() })
-                .filter (function (choice, i, arr) { return choice && arr.indexOf (choice) == i; });
+  // req.body.title = req.body.title.trim();
+  // req.body.choices = req.body.choices
+  //               .map(function(choice) {return choice.trim() })
+  //               .filter (function (choice, i, arr) { return choice && arr.indexOf (choice) == i; });
+  //
+  // req.checkBody({
+  //  'title': {
+  //     notEmpty: true,
+  //     errorMessage: 'Invalid title'
+  //   },
+  //   'choices': {
+  //     enoughChoices: true,
+  //     errorMessage: 'At least two unique choices are required'
+  //   }
+  // });
+  //
+  // var errors = req.validationErrors();
+  //
+  // var newPoll = new Poll({
+  //   title: req.body.title,
+  //   choices: req.body.choices.map(function(name) {
+  //       return {name: name, votes: 0}
+  //     }, {}),
+  //   creator: res.locals.user.username,
+  //   voted: []
+  // });
 
-  req.checkBody({
-   'title': {
-      notEmpty: true,
-      errorMessage: 'Invalid title'
-    },
-    'choices': {
-      enoughChoices: true,
-      errorMessage: 'At least two unique choices are required'
-    }
-  });
-
-  var errors = req.validationErrors();
+  // #wowsers
 
   var newPoll = new Poll({
-    title: req.body.title,
-    choices: req.body.choices.map(function(name) {
-        return {name: name, votes: 0}
-      }, {}),
+    title: 'alpha',
+    choices: [{name: 'one', votes: 1},{name: 'two', votes: 2},{name: 'three', votes: 3}],
     creator: res.locals.user.username,
     voted: []
   });
-
+  Poll.createPoll(newPoll, function(err, poll) {
+    if (err) throw err;
+  });
+  var newPoll = new Poll({
+    title: 'beta',
+    choices: [{name: 'one', votes: 1},{name: 'two', votes: 2},{name: 'three', votes: 3}],
+    creator: res.locals.user.username,
+    voted: []
+  });
+  Poll.createPoll(newPoll, function(err, poll) {
+    if (err) throw err;
+  });
+  var newPoll = new Poll({
+    title: 'gamma',
+    choices: [{name: 'one', votes: 1},{name: 'two', votes: 2},{name: 'three', votes: 3}],
+    creator: res.locals.user.username,
+    voted: []
+  });
   Poll.createPoll(newPoll, function(err, poll) {
     if (err) throw err;
   });
 
+  // /wowsers
+
+
+  // Poll.createPoll(newPoll, function(err, poll) {
+  //   if (err) throw err;
+  // });
+
   req.flash("success_msg", "Poll succesfully made")
-  res.redirect("/");
+  res.send("/");
 
 }); // post polls/new
 
@@ -88,6 +121,30 @@ router.get('/:username/:pollname', function(req, res) {
   });
 
 });
+
+router.delete('/:id', function(req, res) {
+  console.log("In poll DELETE");
+  console.log("request to delete " + req.params.id);
+  Poll.removePollById(req.params.id, function (err, results) {
+    if (err) {
+      console.log("error in Poll.remove");
+      req.flash("error_msg", 'Failed to remove poll.')
+      throw err;
+    } else {
+      console.log("success remove");
+    }
+    return res.render("polls-show");
+    console.log("able abe");
+    // req.flash("success_msg", "Poll asdfasdf succesfully made")
+    // res.send("/");
+    // var context = { results: results };
+    //
+    // res.render('polls-show', context);
+  });
+});
+
+
+
 
 
 function buildPollChart(poll) {

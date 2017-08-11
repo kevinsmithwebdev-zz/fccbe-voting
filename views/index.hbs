@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/controllers/clickController.client.js"></script>
+
 <h2 class="page-header">Dashboard</h2>
 
 <h3>User Actions</h3>
@@ -10,5 +12,8 @@
 {{/unless}}
 
 {{#each polls}}
-  <button class="btn-primary poll-button">{{title}}</button> <button class="btn-danger poll-button-delete">X</button> <br>
+  <button class="btn-primary poll-button">{{title}}</button>
+  <button class="btn-danger poll-button-delete" value="{{_id}}"">X</button> <br>
 {{/each}}
+
+Polls.length = {{polls.length}}

@@ -22,5 +22,10 @@ module.exports.getPoll = function(username, pollname, callback) {
 }
 
 module.exports.getUserPolls = function(username, callback) {
-  Poll.find(query, {creator: username});
+  Poll.find({creator: username}, callback);
+}
+
+module.exports.removePollById = function(id, callback) {
+  console.log("removePollById - " + id);
+  Poll.findByIdAndRemove(id, callback);
 }

@@ -23,7 +23,7 @@ var db = mongoose.connection;
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var polls = require('./routes/polls');
-// var api = require('./routes/api');
+var api = require('./routes/api');
 // var controllers = require('./controllers/clickController.client');
 
 
@@ -148,7 +148,7 @@ app.use(function(req, res, next) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/polls', polls);
-// app.use('/api', api);
+app.use('/api', api);
 app.use('/controllers', express.static(process.cwd() + '/controllers'));
 
 // app.use('/controllers', controllers);

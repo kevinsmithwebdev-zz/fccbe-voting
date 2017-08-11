@@ -14,13 +14,16 @@
   } // addEventListenerByClass()
 
   addEventListenerByClass('poll-button-delete', 'click', handlePollDelete);
+  addEventListenerByClass('poll-button-link', 'click', handlePollLink);
+
+  function handlePollLink() {
+    console.log("in handlePollLink");
+    window.location.href = '/polls/' + this.value;
+  }
 
   function handlePollDelete() {
-    console.log('in delete button...');
-    console.log(this.value);
     ajaxRequest('DELETE', '/polls/' + this.value, function () {
-      console.log("callback in client click handler for delete poll button");
-       ajaxRequest('GET', '/', function() { console.log("wowsers callback");});
+      location.reload();
     });
   } // handlePollDelete()
 
@@ -42,9 +45,6 @@
 
   function ajaxRequest (method, url, callback) {
     var xmlhttp = new XMLHttpRequest();
-    console.log("in ajaxRequest ...");
-    console.log(method);
-    console.log(url);
     xmlhttp.onreadystatechange = function () {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
         callback(xmlhttp.response);

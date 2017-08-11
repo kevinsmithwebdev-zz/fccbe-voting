@@ -15,8 +15,6 @@ router.get('/', ensureAuthenticated, function(req, res) {
       req.flash("error_msg", 'Error getting polls for user "' + res.locals.user.username + '"');
       res.render('index');
     } else {
-      console.log("*** in GET /, success");
-      console.log(polls.length);
       res.render('index', {polls: polls});
     }
 

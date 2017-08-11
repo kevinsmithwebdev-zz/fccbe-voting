@@ -12,8 +12,8 @@
 {{/unless}}
 
 {{#each polls}}
-  <button class="btn-primary poll-button">{{title}}</button>
-  <button class="btn-danger poll-button-delete" value="{{_id}}"">X</button> <br>
+  <div>
+    <button class="btn-primary poll-button poll-button-link" value="{{creator}}/{{title}}">{{title}}</button>
+    <button class="btn-danger poll-button poll-button-delete" value="{{_id}}">X</button>
+  </div>
 {{/each}}
-
-Polls.length = {{polls.length}}

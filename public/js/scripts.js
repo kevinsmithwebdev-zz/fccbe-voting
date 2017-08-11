@@ -1,43 +1,98 @@
+$(function() {
+  // var apiStr = '/api' + this.location.pathname;
+
+  var apiStr = '/api?creator=asdf&poll=beta';
+  console.log(apiStr);
+
+  $.getJSON(apiStr, function( data ) {
+    console.log("in getJSON, data...");
+    console.log(data);
+
+  });
 
 
-var ctx = document.getElementById('myChart').getContext('2d');
 
 
-console.log(this);
-
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
+  var chart = AmCharts.makeChart("poll-chart", {
+    "type": "serial",
+    "theme": "light",
+    "marginRight": 70,
+    "dataProvider": [{
+      "country": "USA",
+      "visits": 3025,
+      "color": "#FF0F00"
+    }, {
+      "country": "China",
+      "visits": 1882,
+      "color": "#FF6600"
+    }, {
+      "country": "Japan",
+      "visits": 1809,
+      "color": "#FF9E01"
+    }, {
+      "country": "Germany",
+      "visits": 1322,
+      "color": "#FCD202"
+    }, {
+      "country": "UK",
+      "visits": 1122,
+      "color": "#F8FF01"
+    }, {
+      "country": "France",
+      "visits": 1114,
+      "color": "#B0DE09"
+    }, {
+      "country": "India",
+      "visits": 984,
+      "color": "#04D215"
+    }, {
+      "country": "Spain",
+      "visits": 711,
+      "color": "#0D8ECF"
+    }, {
+      "country": "Netherlands",
+      "visits": 665,
+      "color": "#0D52D1"
+    }, {
+      "country": "Russia",
+      "visits": 580,
+      "color": "#2A0CD0"
+    }, {
+      "country": "South Korea",
+      "visits": 443,
+      "color": "#8A0CCF"
+    }, {
+      "country": "Canada",
+      "visits": 441,
+      "color": "#CD0D74"
+    }],
+    "valueAxes": [{
+      "axisAlpha": 0,
+      "position": "left",
+      "title": "Visitors from country"
+    }],
+    "startDuration": 1,
+    "graphs": [{
+      "balloonText": "<b>[[category]]: [[value]]</b>",
+      "fillColorsField": "color",
+      "fillAlphas": 0.9,
+      "lineAlpha": 0.2,
+      "type": "column",
+      "valueField": "visits"
+    }],
+    "chartCursor": {
+      "categoryBalloonEnabled": false,
+      "cursorAlpha": 0,
+      "zoomable": false
     },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
+    "categoryField": "country",
+    "categoryAxis": {
+      "gridPosition": "start",
+      "labelRotation": 45
+    },
+    "export": {
+      "enabled": true
     }
+
+  });
 });

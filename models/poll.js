@@ -26,6 +26,5 @@ module.exports.getUserPolls = function(username, callback) {
 }
 
 module.exports.removePollById = function(id, callback) {
-  console.log("removePollById - " + id);
   Poll.findByIdAndRemove(id, callback);
 }

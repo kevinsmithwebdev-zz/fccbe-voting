@@ -19,7 +19,8 @@ $(function() {
     var maxVote = 0;
 
     for (var i=data.choices.length-1; i>=0; i--) {
-      namesArr.push(data.choices[i].name);
+      namesArr.push(data.choices[i].name
+        + ((data.choices[i].votes)?"":" (no votes yet)"));
       votesArr.push(data.choices[i].votes);
       if (maxVote<data.choices[i].votes)
         maxVote=data.choices[i].votes;

@@ -44,15 +44,10 @@ module.exports.vote = function(data, callback) {
     creator: data.creator
   }
 
-  console.log("query ...")
-  console.log(query);
 
   var update = {};
 
   update['choices.' + data.vote + ".votes"] = 1;
-
-  console.log("update...")
-  console.log(update);
 
   Poll.findOneAndUpdate(query, {$inc: update}, {upsert:true, safe:true}, callback);
 

@@ -27,7 +27,7 @@ router.post('/new', function(req, res) {
     }
   });
 
-  var errors = req.validationErrors();
+  var errors = req.getValidationResults();
 
   var newPoll = new Poll({
     title: req.body.title,

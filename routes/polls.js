@@ -67,11 +67,13 @@ router.get('/show', function(req, res) {
 
 // /:username/:pollname
 
-router.get('/:username/:pollname', function(req, res) {
+router.get('/', function(req, res) {
+  var creator = req.query.creator;
+  var pollName = req.query.poll;
 
-  Poll.getPoll(req.params.username, req.params.pollname, function(err, poll) {
+  Poll.getPoll(creator, pollName, function(err, poll) {
     if (err) {
-      console.log("Error finding poll - /polls/" + req.params.username + "/" + req.params.pollname);
+      console.log("Error finding poll - /polls/" + creator + "/" + pollName);
       console.log(err);
     } else {
 

@@ -13,7 +13,7 @@
 
 {{#each polls}}
   <div>
-    <button class="btn-primary poll-button poll-button-link" value="{{creator}}/{{title}}">{{title}}</button>
+    <button class="btn-primary poll-button poll-button-link" value="?creator={{creator}}&poll={{title}}">{{title}}</button>
     <button class="btn-danger poll-button poll-button-delete" value="{{_id}}">X</button>
   </div>
 {{/each}}

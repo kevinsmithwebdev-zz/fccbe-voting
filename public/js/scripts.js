@@ -1,98 +1,60 @@
 $(function() {
-  // var apiStr = '/api' + this.location.pathname;
-
-  var apiStr = '/api?creator=asdf&poll=beta';
-  console.log(apiStr);
+  var apiStr = '/api' + this.location.search;
 
   $.getJSON(apiStr, function( data ) {
-    console.log("in getJSON, data...");
-    console.log(data);
-
+    makePollChart(data);
   });
 
 
 
+//***************************************
 
-  var chart = AmCharts.makeChart("poll-chart", {
-    "type": "serial",
-    "theme": "light",
-    "marginRight": 70,
-    "dataProvider": [{
-      "country": "USA",
-      "visits": 3025,
-      "color": "#FF0F00"
-    }, {
-      "country": "China",
-      "visits": 1882,
-      "color": "#FF6600"
-    }, {
-      "country": "Japan",
-      "visits": 1809,
-      "color": "#FF9E01"
-    }, {
-      "country": "Germany",
-      "visits": 1322,
-      "color": "#FCD202"
-    }, {
-      "country": "UK",
-      "visits": 1122,
-      "color": "#F8FF01"
-    }, {
-      "country": "France",
-      "visits": 1114,
-      "color": "#B0DE09"
-    }, {
-      "country": "India",
-      "visits": 984,
-      "color": "#04D215"
-    }, {
-      "country": "Spain",
-      "visits": 711,
-      "color": "#0D8ECF"
-    }, {
-      "country": "Netherlands",
-      "visits": 665,
-      "color": "#0D52D1"
-    }, {
-      "country": "Russia",
-      "visits": 580,
-      "color": "#2A0CD0"
-    }, {
-      "country": "South Korea",
-      "visits": 443,
-      "color": "#8A0CCF"
-    }, {
-      "country": "Canada",
-      "visits": 441,
-      "color": "#CD0D74"
-    }],
-    "valueAxes": [{
-      "axisAlpha": 0,
-      "position": "left",
-      "title": "Visitors from country"
-    }],
-    "startDuration": 1,
-    "graphs": [{
-      "balloonText": "<b>[[category]]: [[value]]</b>",
-      "fillColorsField": "color",
-      "fillAlphas": 0.9,
-      "lineAlpha": 0.2,
-      "type": "column",
-      "valueField": "visits"
-    }],
-    "chartCursor": {
-      "categoryBalloonEnabled": false,
-      "cursorAlpha": 0,
-      "zoomable": false
-    },
-    "categoryField": "country",
-    "categoryAxis": {
-      "gridPosition": "start",
-      "labelRotation": 45
-    },
-    "export": {
-      "enabled": true
+  function makePollChart(data) {
+
+    var gradientNum=data.choices.length-2;
+
+    var namesArr = [];
+    var votesArr = [];
+
+    var maxVote = 0;
+
+    for (var i=data.choices.length-1; i>=0; i--) {
+      namesArr.push(data.choices[i].name);
+      votesArr.push(data.choices[i].votes);
+      if (maxVote<data.choices[i].votes)
+        maxVote=data.choices[i].votes;
     }
 
-  });
-});
+    if (maxVote==0)
+      maxVote=1;
+    var maxItems = maxVote+1;
+
+    if (maxItems>10)
+      maxItems=null;
+
+    var chartWidth = 600;
+    var chartHeight = 400;
+
+    var chartData = {
+      type: "hbar",  // Specify your chart type here.
+
+      'scale-x': {  values: namesArr , tick: {visible: false},
+        item: { 'max-chars':420, width: chartWidth*.83, 'wrap-text': true, 'offset-x': chartWidth*.85, 'text-align':'left', 'wrap-text': true, bold: true, 'font-size': '14px', 'color': 'black'}},
+      series: [ {
+        values: votesArr,
+        placement: 'opposite',
+        "background-color": 'green',
+        alpha: .5,
+      }],
+      'scale-y': { 'max-items': maxItems, decimals: 0, placement: 'opposite', 'minor-tick': {visible: false}}
+
+    };
+    zingchart.render({ // Render Method[3]
+      id: "poll-chart",
+      data: chartData,
+      height: chartHeight,
+      width: chartWidth
+    });
+
+  } // makePollChart()
+}); // document ready

@@ -11,10 +11,11 @@
       for (var i = 0, len = list.length; i < len; i++) {
           list[i].addEventListener(event, fn, false);
       }
-  } // addEventListenerByClass()
+  } // addEventListenerByClass
 
   addEventListenerByClass('poll-button-delete', 'click', handlePollDelete);
   addEventListenerByClass('poll-button-link', 'click', handlePollLink);
+  addEventListenerByClass('vote-button', 'click', handleVote);
 
   function handlePollLink() {
     console.log("in handlePollLink");
@@ -26,6 +27,15 @@
       location.reload();
     });
   } // handlePollDelete()
+
+  function handleVote() {
+    console.log("in handleVote");
+    console.log(this.value);
+    ajaxRequest('PUT', '/api/' + this.value, function () {
+      console.log("back in handleVote callback");
+      location.reload();
+    });
+  }
 
 } // window.onload
 

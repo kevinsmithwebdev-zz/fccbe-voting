@@ -12,17 +12,19 @@
       <nav>
         <ul class="nav nav-pills pull-right">
           {{#if user}}
-          <li role="presentation"><a href="/">Dashboard</a></li>
-          <li role="presentation"><a href="/users/logout">Logout</a></li>
+            <li role="presentation"><a href="/">Dashboard</a></li>
+            <li role="presentation"><a href="/users/logout">Logout</a></li>
           {{else}}
-          <li role="presentation"><a href="/users/login">Login</a></li>
-          <li role="presentation"><a href="/users/register">Register</a></li>
+            <li role="presentation"><a href="/users/login">Login</a></li>
+            <li role="presentation"><a href="/users/register">Register</a></li>
           {{/if}}
         </ul>
       </nav>
-      <h3 class="text-muted">LoginApp
+      <h3 class="text-muted">Voting App
       {{#if user}}
         - Welcome {{user.name}}
+      {{else}}
+        - not logged in
       {{/if}}
       </h3>
     </div>

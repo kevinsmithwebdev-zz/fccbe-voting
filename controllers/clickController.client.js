@@ -19,27 +19,29 @@
 
   function handlePollLink() {
     console.log("in handlePollLink");
+    console.log(this.value);
     window.location.href = '/polls/' + this.value;
   }
 
   function handlePollDelete() {
-    ajaxRequest('DELETE', '/polls/' + this.value, function () {
+    ajaxRequest('DELETE', '/polls/' + this.value, function() {
       location.reload();
     });
   } // handlePollDelete()
 
   function handleVote() {
-    console.log("in handleVote");
     console.log(this.value);
-    ajaxRequest('PUT', '/api/' + this.value, function () {
-      console.log("back in handleVote callback");
+    ajaxRequest('PUT', '/api' + this.value, function() {
       location.reload();
     });
+    location.reload();
   }
 
 } // window.onload
 
-  // ***************************************
+// ***************************************
+// ***************************************
+// ***************************************
 
   function ready (fn) {
     if (typeof fn !== 'function') {
@@ -60,11 +62,8 @@
         callback(xmlhttp.response);
       }
     };
-
     xmlhttp.open(method, url, true);
     xmlhttp.send();
   }
-
-
 
 })();

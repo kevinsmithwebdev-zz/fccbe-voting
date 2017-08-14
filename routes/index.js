@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var Poll = require('../models/poll');
 
-// var ClickHandlerClient = require(process.cwd() + '/controllers/clickController.client.js');
+var auth = require('./common/auth');
+
+var Poll = require('../models/poll');
 
 // get homepage
 
-router.get('/', ensureAuthenticated, function(req, res) {
+router.get('/', auth.ensureAuthenticated, function(req, res) {
   Poll.getUserPolls(res.locals.user.username, function(err, polls) {
     if (err) {
       console.log("Error get polls for user " + res.locals.user.username);
@@ -21,16 +22,5 @@ router.get('/', ensureAuthenticated, function(req, res) {
   });
 
 });
-
-// ***************************************
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    res.redirect('/users/login');
-  }
-}
-
 
 module.exports = router;

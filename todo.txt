@@ -5,3 +5,7 @@ ClickHandlerClient - handlePollDelete()
 
 poll-show.hbs
   is <script src="../../js/scripts.js"></script> best path?
+
+copy to clipboard button look?
+
+sort on view all polls?

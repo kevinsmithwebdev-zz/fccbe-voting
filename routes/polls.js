@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+var auth = require('./common/auth');
+
 var Poll = require('../models/poll');
 
 // polls/new
@@ -27,7 +29,7 @@ router.post('/new', function(req, res) {
     }
   });
 
-  var errors = req.getValidationResults();
+  var errors = req.getValidationResult();
 
   var newPoll = new Poll({
     title: req.body.title,
@@ -39,19 +41,21 @@ router.post('/new', function(req, res) {
   });
 
   Poll.createPoll(newPoll, function(err, poll) {
-    if (err) throw err;
+    if (err)
+      throw err;
+    else {
+      req.flash("success_msg", "Poll succesfully made")
+      res.redirect('/');
+    }
   });
-
-  req.flash("success_msg", "Poll succesfully made")
-  res.send("/");
 
 }); // post polls/new
 
 
-// show polls
 
+// show all polls
 
-router.get('/show', function(req, res) {
+router.get('/all', function(req, res) {
 
   Poll.find(function (err, results) {
     if (err) {
@@ -61,9 +65,10 @@ router.get('/show', function(req, res) {
 
     var context = { results: results };
 
-    res.render('polls-show', context);
+    res.render('polls-show-all', context);
   });
 });
+
 
 // /:username/:pollname
 
@@ -76,22 +81,29 @@ router.get('/', function(req, res) {
       console.log("Error finding poll - /polls/" + creator + "/" + pollName);
       console.log(err);
     } else {
+      var isLoggedIn = Boolean(res.locals.user);
+      var hasVoted;
 
-      var context = {poll: poll,
+      if (isLoggedIn)
+        hasVoted = (poll.voted.indexOf(res.locals.user.username) != -1);
+
+      var context = {
+        poll: poll,
+        isLoggedIn: isLoggedIn,
+        hasVoted: hasVoted,
+        url: req.protocol + '://' + req.get('host') + req.originalUrl,
         helpers: {
           wowsers: function () {
              return buildPollChart(poll);
            }
         }
       };
-
       res.render('poll-show', context);
     }
   });
-
 });
 
-router.delete('/:id', function(req, res) {
+router.delete('/:id', auth.ensureAuthenticated, function(req, res) {
 
   Poll.removePollById(req.params.id, function (err, results) {
     if (err) {

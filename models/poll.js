@@ -29,40 +29,20 @@ module.exports.removePollById = function(id, callback) {
   Poll.findByIdAndRemove(id, callback);
 }
 
-
-
-
-
-
 module.exports.vote = function(data, callback) {
-
-  console.log("in Poll.vote")
-  console.log(data);
 
   var query = {
     title: data.poll,
     creator: data.creator
   }
 
-
   var update = {};
 
   update['choices.' + data.vote + ".votes"] = 1;
 
-  Poll.findOneAndUpdate(query, {$inc: update}, {upsert:true, safe:true}, callback);
-
-//******************
-
-// wtf?!?! no callback?!?!
-
-  // function(err){
-  //   if(err){
-  //     console.log("Something wrong when updating data!");
-  //     console.log(err);
-  //   } else {
-  //     console.log("Updated!");
-  //
-  //   }
-
+  Poll.findOneAndUpdate(query, {
+      $inc: update,
+      $push: { "voted": data.username }
+    }, {new:true}, callback);
 
 }

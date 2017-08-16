@@ -16,6 +16,9 @@ router.get('/', function(req, res) {
   });
 });
 
+
+// voting
+
 router.put('/', auth.ensureAuthenticated, function(req, res) {
   var data = { creator: req.query.creator, poll: req.query.poll, vote: req.query.vote, username: req.query.username };
   Poll.vote(data, function(err, poll) {
@@ -24,7 +27,12 @@ router.put('/', auth.ensureAuthenticated, function(req, res) {
                     ", vote=" + req.params.vote + ", user=" + req.params.user);
       console.log("Error putting - /polls/" + req.params.username + "/" + req.params.pollname);
       console.log(err);
-    } 
+      req.flash("error_msg", "Vote failed");
+    } else {
+      req.flash("success_msg", "Vote successfully made");
+    }
+
+    res.render('index', {message: req.flash('message') });
   });
 });
 

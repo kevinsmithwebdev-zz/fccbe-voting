@@ -1,16 +1,13 @@
 var mongoose = require("mongoose");
 var bcrypt = require("bcryptjs");
 
-
 var UserSchema = mongoose.Schema({
   username: {
     type: String,
+    unique: true,
     index: true
   },
   password: {
-    type: String
-  },
-  email: {
     type: String
   },
   name: {
@@ -29,6 +26,16 @@ module.exports.createUser = function(newUser, callback) {
   });
 }
 
+module.exports.changePassword = function(data, callback) {
+
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(data.newPassword, salt, function(err, hash) {
+      var query = { username: data.username };
+      User.findOneAndUpdate(query, { password: hash }, {new: true}, callback);
+    });
+  });
+}
+
 module.exports.getUserByUsername = function(username, callback) {
   var query = {username: username};
   User.findOne(query, callback);
@@ -39,6 +46,8 @@ module.exports.getUserById = function(id, callback) {
 }
 
 module.exports.comparePassword = function(candidatePassword, hash, callback) {
+  if (!hash)
+    hash = "";
   bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
     if (err) throw err;
     callback(null, isMatch);

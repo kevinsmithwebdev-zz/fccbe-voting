@@ -7,11 +7,11 @@ var Poll = require('../models/poll');
 
 // polls/new
 
-router.get('/new', function(req, res) {
+router.get('/new', auth.ensureAuthenticated, function(req, res) {
   res.render('poll-new');
 });
 
-router.post('/new', function(req, res) {
+router.post('/new', auth.ensureAuthenticated, function(req, res) {
 
   req.body.title = req.body.title.trim();
   req.body.choices = req.body.choices
@@ -51,20 +51,15 @@ router.post('/new', function(req, res) {
 
 }); // post polls/new
 
-
-
 // show all polls
 
 router.get('/all', function(req, res) {
-
   Poll.find(function (err, results) {
     if (err) {
       console.log("error in Poll.find");
       throw err;
     }
-
     var context = { results: results };
-
     res.render('polls-show-all', context);
   });
 });

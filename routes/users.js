@@ -16,81 +16,93 @@ router.get('/register', function(req, res) {
 
 router.post('/register', function(req, res) {
 
-  var name = req.body.name;
-  var username = req.body.username;
-  var password = req.body.password;
-  var password2 = req.body.password2;
+  var name = req.body.name.trim();
+  var username = req.body.username.trim();
+  var password = req.body.password.trim();
+  var password2 = req.body.password2.trim();
 
   // validation
 
   req.checkBody('name', "Name is required").notEmpty();
   req.checkBody('username', "Username is required").notEmpty();
-  //req.checkBody('name', "That username already in use").uniqueUsername();
+  req.checkBody("username", "Username must be at least 4 characters, only alphanumeric with no whitepsace or special characters").matches(/^[a-zA-Z0-9]{4,}$/, "i");
   req.checkBody('password', "Password is required").notEmpty();
+  req.checkBody("password", "Password must be at least 4 characters long and have no whitepsace").matches(/^[^\s]{4,}$/, "i");
   req.checkBody('password2', "Passwords do not match").equals(req.body.password);
 
-  var errors = req.validationErrors();
+  User.count({ 'username': username }, function (err, count) {
+    if (err) throw err;
 
-  if (errors) {
-    res.render('register', {
-      errors: errors
+    req.getValidationResult().then(function(result) {
+
+      var errors = result.array();
+
+      if (count>0) {
+        errors.push( { param: 'username', msg: 'That username is already in use.', value: 'u'} );
+      }
+      if (errors.length) {
+        res.render('register', {
+          errors: errors
+        });
+      } else {
+        var newUser = new User({
+          name: name,
+          username: username,
+          password: password
+        });
+        User.createUser(newUser, function(err, user) { // wowsers
+          if (err) throw err;
+          req.flash("success_msg", "You are registered and can now log in.");
+          res.redirect("/users/login");
+        });
+      }
     });
-  } else {
-    var newUser = new User({
-      name: name,
-      username: username,
-      password: password
-    });
-
-    User.createUser(newUser, function(err, user) { // wowsers
-      if (err) throw err;
-      console.log(user);
-    });
-
-    req.flash("success_msg", "You are registered and can now log in.")
-    res.redirect("/users/login");
-
-  }
+  });
 });
 
-// login
+// login and logout
 
 router.get('/login', function(req, res) {
-  res.render('login');
+  res.render('login', {message: req.flash('message') });
+});
+
+router.post('/login',
+  passport.authenticate('local', {successRedirect: '/', failureRedirect: '/users/login', failureFlash: 'Login failure', successFlash: 'Login successful'}),
+    function(req, res) { console.log("error logging in.")});
+
+router.get('/logout', function(req, res) {
+  req.logout();
+  req.flash('success_msg', "Successfully logged out");
+  res.redirect('/users/login');
 });
 
 // change password
 
 router.get('/change-password', auth.ensureAuthenticated, function(req, res) {
-  res.render('change-password');
+  res.render('change-password', {message: req.flash('message') });
 });
 
 
 router.post('/change-password', function(req, res) {
-
-  console.log("in change-password");
-
   var newPassword = req.body['new-password'].trim();
   var newPassword2 = req.body['new-password2'].trim();
 
-  console.log('***' + req.body['new-password'] + '***');
-  console.log('***' + req.body['new-password2'] + '***');
-
   req.checkBody('new-password', "New passwords are required").notEmpty();
-  req.checkBody('new-password2', "New asswords do not match").equals(req.body['new-password']);
+  req.checkBody("new-password", "Password must be at least 4 characters long and have no whitepsace").matches(/^[^\s]{4,}$/, "i");
+  req.checkBody('new-password2', "New passwords do not match").equals(req.body['new-password']);
 
   req.getValidationResult().then(function(result){
-    if(!result.isEmpty()) {
-      console.log("errors!!!");
-      console.log(result.array());
-      // res.redirect('users/change-password', {
-      //   errors: errors
-      // });
+    var errors = result.array();
+    if(errors.length) {
+      res.render('change-password', {
+        errors: errors
+      });
     } else {
-      console.log("no errors!!!");
-
-      req.flash("success_msg", "Password has been changed, please log in.")
-      res.redirect("login");
+      User.changePassword({ username: req.user.username, newPassword: newPassword}, function() {
+        req.logout();
+        req.flash("success_msg", "Password has been changed, please log in again.")
+        res.redirect("login");
+      });
     }
   });
 
@@ -124,18 +136,6 @@ passport.deserializeUser(function(id, done) {
   User.getUserById(id, function(err, user) {
     done(err, user);
   });
-});
-
-router.post('/login',
-  passport.authenticate('local', {successRedirect: '/', failureRedirect: '/users/login', failureFlash: true}),
-  function(req, res) {
-    res.redirect('/');
-  });
-
-router.get('/logout', function(req, res) {
-  req.logout();
-  req.flash('success_msg', "Successfully logged out");
-  res.redirect('/users/login');
 });
 
 

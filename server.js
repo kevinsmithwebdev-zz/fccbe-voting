@@ -1,3 +1,4 @@
+var dotenv = require('dotenv').config();
 var express = require('express');
 var path = require('path');
 var cookieParser= require('cookie-parser');
@@ -11,11 +12,10 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
+// database
 
-mongoose.connect('mongodb://localhost/votingApp', {
+mongoose.connect(process.env.DB_ADDRESS, {
   useMongoClient: true
-  // wowsers, recheck
-  // http://mongoosejs.com/docs/connections.html#use-mongo-client
 });
 
 var db = mongoose.connection;
@@ -24,8 +24,10 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var polls = require('./routes/polls');
 var api = require('./routes/api');
-// var controllers = require('./controllers/clickController.client');
 
+var User = require('./models/user');
+
+// var controllers = require('./controllers/clickController.client');
 
 // init app
 
@@ -45,7 +47,6 @@ app.engine('.hbs', exphbs(
         }
     ));
 
-
 app.set('view engine', '.hbs');
 
 app.get('/test', function (req, res, next) {
@@ -58,10 +59,6 @@ app.get('/test', function (req, res, next) {
         }
     });
 });
-
-
-
-
 
 // body parser middleware
 
@@ -114,17 +111,6 @@ app.use(expressValidator({
   customValidators: {
     enoughChoices: function(value) {
         return value.length>=2;
-    },
-    uniqueUsername: function(value) {
-        console.log("\n\n\nusername validator");
-        User.findOne({ 'username': value }, function (err, user) {
-          if (err) throw err;
-          console.log("\n\nuser\n\n");
-          console.log(user);
-        })
-
-
-        return true;
     }
   }
 }));
@@ -155,7 +141,8 @@ app.use('/controllers', express.static(process.cwd() + '/controllers'));
 
 // set port and start
 
-app.set('port', (process.env.PORT || 3000));
-app.listen(app.get('port'), function() {
-  console.log("\nServer started on port " + app.get('port') + "...");
+
+app.listen(process.env.PORT, function() {
+  console.log("\nServer started on port " + process.env.PORT + "...");
+
 });

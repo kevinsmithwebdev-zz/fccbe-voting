@@ -24,7 +24,7 @@ router.put('/', auth.ensureAuthenticated, function(req, res) {
                     ", vote=" + req.params.vote + ", user=" + req.params.user);
       console.log("Error putting - /polls/" + req.params.username + "/" + req.params.pollname);
       console.log(err);
-    }
+    } 
   });
 });
 

@@ -30,19 +30,14 @@ module.exports.removePollById = function(id, callback) {
 }
 
 module.exports.vote = function(data, callback) {
-
   var query = {
     title: data.poll,
     creator: data.creator
   }
-
   var update = {};
-
   update['choices.' + data.vote + ".votes"] = 1;
-
   Poll.findOneAndUpdate(query, {
       $inc: update,
       $push: { "voted": data.username }
     }, {new:true}, callback);
-
 }

@@ -14,14 +14,30 @@ body {
 
 /* Custom page header */
 .header {
-  padding-bottom: 20px;
+  padding: 10px 10px 20px 10px;
+  background-color: #0047AB;
   border-bottom: 1px solid #e5e5e5;
+  color: white;
+  border-radius: 4px;
 }
+
+.header li a {
+  color: white;
+}
+
+.header li a:hover {
+  color: #0047AB;
+}
+
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0 10px 0 0;
+  padding-left: 20px;
   line-height: 40px;
+}
+
+nav {
+  padding-right: 20px;
 }
 
 /* Custom page footer */
@@ -94,8 +110,15 @@ body {
 .poll-button-delete {
 }
 
+.copy-btn {
+  padding: 0 2px 1px 1px;
+  margin: 0 1px 1px 1px;
+  background-color: #DDD;
+}
 
-
+.copy-btn:hover {
+    background-color: #BBB;
+}
 
 footer {
   margin-top: 40px;

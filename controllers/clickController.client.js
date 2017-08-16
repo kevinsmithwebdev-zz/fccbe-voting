@@ -18,8 +18,6 @@
   addEventListenerByClass('vote-button', 'click', handleVote);
 
   function handlePollLink() {
-    console.log("in handlePollLink");
-    console.log(this.value);
     window.location.href = '/polls/' + this.value;
   }
 
@@ -30,11 +28,9 @@
   } // handlePollDelete()
 
   function handleVote() {
-    console.log(this.value);
     ajaxRequest('PUT', '/api' + this.value, function() {
       location.reload();
     });
-    location.reload();
   }
 
 } // window.onload

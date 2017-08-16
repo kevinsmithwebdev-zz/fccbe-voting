@@ -14,13 +14,11 @@ router.get('/', auth.ensureAuthenticated, function(req, res) {
       console.log(err);
       throw err;
       req.flash("error_msg", 'Error getting polls for user "' + res.locals.user.username + '"');
-      res.render('index');
+      res.render('index', {message: req.flash('message') });
     } else {
-      res.render('index', {polls: polls});
+      res.render('index', {message: req.flash('message'), polls: polls});
     }
-
   });
-
 });
 
 module.exports = router;

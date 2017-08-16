@@ -14,7 +14,7 @@ var mongoose = require('mongoose');
 
 // database
 
-mongoose.connect(process.env.DB_ADDRESS, {
+mongoose.connect(process.env.PROD_MONGODB, {
   useMongoClient: true
 });
 

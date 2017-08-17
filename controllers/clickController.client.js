@@ -11,7 +11,7 @@
       for (var i = 0, len = list.length; i < len; i++) {
           list[i].addEventListener(event, fn, false);
       }
-  } // addEventListenerByClass
+  }; // addEventListenerByClass
 
   addEventListenerByClass('poll-button-delete', 'click', handlePollDelete);
   addEventListenerByClass('poll-button-link', 'click', handlePollLink);

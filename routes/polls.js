@@ -5,6 +5,69 @@ var auth = require('./common/auth');
 
 var Poll = require('../models/poll');
 
+// polls/test
+
+router.get('/test', function(req, res) {
+  console.log('in polls.test');
+
+  var newPoll = new Poll({
+    title: "test title 1 " + ((new Date()).getTime()%1000000),
+    choices: [
+        { name: 'choice 1', votes: 5 },
+        { name: 'choice 1', votes: 9 },
+        { name: 'choice 1', votes: 7 }
+      ],
+    creator: 'qwer',
+    voted: []
+  });
+
+  Poll.createPoll(newPoll, function(err, poll) {
+    if (err)
+      throw err;
+    console.log("test poll created...");
+    console.log(poll);
+  });
+
+  var newPoll = new Poll({
+    title: "test title 2 " + ((new Date()).getTime()%1000000),
+    choices: [
+        { name: 'choice 1', votes: 5 },
+        { name: 'choice 1', votes: 9 },
+        { name: 'choice 1', votes: 7 }
+      ],
+    creator: 'qwer',
+    voted: []
+  });
+
+  Poll.createPoll(newPoll, function(err, poll) {
+    if (err)
+      throw err;
+    console.log("test poll created...");
+    console.log(poll);
+  });
+
+  var newPoll = new Poll({
+    title: "test title 3 " + ((new Date()).getTime()%1000000),
+    choices: [
+        { name: 'choice 1', votes: 5 },
+        { name: 'choice 1', votes: 9 },
+        { name: 'choice 1', votes: 7 }
+      ],
+    creator: 'qwer',
+    voted: []
+  });
+
+  Poll.createPoll(newPoll, function(err, poll) {
+    if (err)
+      throw err;
+    console.log("test poll created...");
+    console.log(poll);
+  });
+
+
+
+});
+
 // polls/new
 
 router.get('/new', auth.ensureAuthenticated, function(req, res) {
@@ -45,7 +108,7 @@ router.post('/new', auth.ensureAuthenticated, function(req, res) {
       throw err;
     else {
       req.flash("success_msg", "Poll succesfully made")
-      res.redirect('/');
+      res.redirect('../');
     }
   });
 
@@ -99,16 +162,13 @@ router.get('/', function(req, res) {
 });
 
 router.delete('/:id', auth.ensureAuthenticated, function(req, res) {
-
   Poll.removePollById(req.params.id, function (err, results) {
     if (err) {
-      console.log("error in Poll.remove");
-      req.flash("error_msg", 'Failed to remove poll.')
       throw err;
     } else {
-      req.flash("error_success", 'Poll removed.');
+      req.flash("success_msg", 'Poll removed.');
+      return res.render('index', {message: req.flash('message')});
     }
-    return res.render("polls-show");
   });
 });
 
